@@ -3,6 +3,6 @@
 #   https://maps.app.goo.gl/...  (short "Share" links work too)
 # Lines starting with # are ignored. Save (commit) the file and the map updates in about a minute.
 
-https://maps.app.goo.gl/4w61W5n8mDGCaPJE6
-https://maps.app.goo.gl/BRDP9SqcHiX5YuiN6
-https://maps.app.goo.gl/EeY1wBnKETt6KP1Q9
+3 KW | https://maps.app.goo.gl/4w61W5n8mDGCaPJE6
+3 KW | https://maps.app.goo.gl/BRDP9SqcHiX5YuiN6
+3 KW | https://maps.app.goo.gl/EeY1wBnKETt6KP1Q9

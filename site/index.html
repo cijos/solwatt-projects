@@ -18,6 +18,8 @@
   header button { font: inherit; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
   #map { flex: 1; min-height: 0; }
   .pin svg { display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+  .pin-label { background: #e11d48; color: #fff; border: none; border-radius: 6px; font-weight: 700; font-size: 0.8rem; padding: 2px 7px; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+  .pin-label::before { border-top-color: #e11d48 !important; }
   .leaflet-popup-content { font-size: 0.95rem; line-height: 1.4; }
   .leaflet-popup-content a { display: inline-block; margin-top: 4px; }
   #msg { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background: #fff; color: #111; padding: 8px 14px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 1000; font-size: 0.9rem; display: none; }
@@ -61,6 +63,7 @@
         const ll = [p.lat, p.lng];
         pts.push(ll);
         L.marker(ll, { icon: pin, title: p.name, alt: p.name }).addTo(map)
+          .bindTooltip(esc(p.name), { permanent: true, direction: 'top', offset: [0, -38], className: 'pin-label' })
           .bindPopup('<b>' + esc(p.name) + '</b><br><a href="' + esc(p.url) + '" target="_blank" rel="noopener">Open in Google Maps ↗</a>');
       }
       bounds = L.latLngBounds(pts);
