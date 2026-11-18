@@ -1,6 +1,6 @@
-# Kerala Places Map
+# Solwatt Projects
 
-Google Maps links → red pins on a zoomable map: **https://cijos.github.io/kerala-map/**
+Solwatt project locations (Google Maps links) → red pins on a zoomable map: **https://cijos.github.io/solwatt-projects/**
 
 Map: [Leaflet](https://leafletjs.com) (open source) with [OpenStreetMap](https://www.openstreetmap.org) tiles – no API key.
 
