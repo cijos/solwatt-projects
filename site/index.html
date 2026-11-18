@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Kerala Places Map</title>
+<meta name="description" content="Places from Google Maps links, plotted on an OpenStreetMap map of Kerala." />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<style>
+  :root { --bar: #ffffff; --text: #111827; --muted: #6b7280; --line: #e5e7eb; --pin: #e11d48; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bar: #111827; --text: #f3f4f6; --muted: #9ca3af; --line: #374151; } }
+  :root[data-theme="dark"] { --bar: #111827; --text: #f3f4f6; --muted: #9ca3af; --line: #374151; }
+  html, body { margin: 0; height: 100%; background: var(--bar); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { display: flex; flex-direction: column; }
+  header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; padding-top: max(10px, env(safe-area-inset-top)); border-bottom: 1px solid var(--line); background: var(--bar); z-index: 2; }
+  header h1 { font-size: 1.05rem; margin: 0; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  header span { color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+  header button { font: inherit; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--line); background: transparent; color: inherit; cursor: pointer; }
+  #map { flex: 1; min-height: 0; }
+  .pin svg { display: block; filter: drop-shadow(0 2px 2px rgba(0,0,0,.35)); }
+  .leaflet-popup-content { font-size: 0.95rem; line-height: 1.4; }
+  .leaflet-popup-content a { display: inline-block; margin-top: 4px; }
+  #msg { position: absolute; top: 70px; left: 50%; transform: translateX(-50%); background: #fff; color: #111; padding: 8px 14px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 1000; font-size: 0.9rem; display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📍 Kerala Places</h1>
+  <span id="count"></span>
+  <button id="fit" type="button">Fit all</button>
+</header>
+<div id="map" role="application" aria-label="Map of places"></div>
+<div id="msg"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+  const map = L.map('map', { zoomControl: true }).setView([10.5, 76.3], 7); // Kerala until the pins load
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  }).addTo(map);
+
+  // red map pin (tip at the exact location)
+  const pin = L.divIcon({
+    className: 'pin',
+    html: '<svg width="30" height="42" viewBox="0 0 30 42" aria-hidden="true"><path d="M15 1C7.3 1 1 7.2 1 14.9 1 25.4 15 41 15 41s14-15.6 14-26.1C29 7.2 22.7 1 15 1z" fill="#e11d48" stroke="#9f1239" stroke-width="1.5"/><circle cx="15" cy="15" r="5.5" fill="#fff"/></svg>',
+    iconSize: [30, 42], iconAnchor: [15, 41], popupAnchor: [0, -36],
+  });
+
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  let bounds = null;
+  function fit() { if (bounds) map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 }); }
+  document.getElementById('fit').onclick = fit;
+
+  fetch('places.json', { cache: 'no-cache' })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((places) => {
+      document.getElementById('count').textContent = places.length + (places.length === 1 ? ' place' : ' places');
+      if (!places.length) return;
+      const pts = [];
+      for (const p of places) {
+        const ll = [p.lat, p.lng];
+        pts.push(ll);
+        L.marker(ll, { icon: pin, title: p.name, alt: p.name }).addTo(map)
+          .bindPopup('<b>' + esc(p.name) + '</b><br><a href="' + esc(p.url) + '" target="_blank" rel="noopener">Open in Google Maps ↗</a>');
+      }
+      bounds = L.latLngBounds(pts);
+      fit();
+    })
+    .catch(() => {
+      const m = document.getElementById('msg');
+      m.textContent = 'Could not load the places. Please reload.';
+      m.style.display = 'block';
+    });
+</script>
+</body>
+</html>

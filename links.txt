@@ -1,0 +1,8 @@
+# Places to show on the map - one per line.
+#   Name | Google Maps link      (name is optional; if left out, it is read from the link)
+#   https://maps.app.goo.gl/...  (short "Share" links work too)
+# Lines starting with # are ignored. Save (commit) the file and the map updates in about a minute.
+
+Kochi | https://www.google.com/maps/place/Kochi,+Kerala/@9.9312,76.2673,12z
+https://www.google.com/maps/place/Munnar,+Kerala/@10.0889,77.0595,13z
+Thiruvananthapuram | https://www.google.com/maps?q=8.5241,76.9366
