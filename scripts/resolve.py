@@ -61,7 +61,9 @@ def coords(url):
 def name_from(url):
     m = re.search(r"/maps/place/([^/@?]+)", url)
     if m:
-        return urllib.parse.unquote_plus(m.group(1)).strip()
+        n = urllib.parse.unquote_plus(m.group(1)).strip()
+        if not re.fullmatch(r"""[-\d.,°'"\sNSEW]+""", n):   # a dropped pin is named like 10°31'48.2"N 76°15'01.1"E
+            return n
     q = urllib.parse.parse_qs(urllib.parse.urlparse(url).query).get("q", [""])[0]
     if q and not re.fullmatch(r"[-\d.,\s]+", q):
         return q.strip()
